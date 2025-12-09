@@ -166,13 +166,13 @@ class DemoApp extends StatelessWidget {
 <table style="width:100%; table-layout:fixed;">
   <tr>
     <td style="width:33%; padding:0;">
-      <img src="example/img/0.png" style="width:100%; display:block;"  alt=""/>
+      <img src="https://github.com/PythonnotJava/flutter_wordcloud/blob/main/example/img/0.png" style="width:100%; display:block;"  alt=""/>
     </td>
     <td style="width:33%; padding:0;">
-      <img src="example/img/1.png" style="width:100%; display:block;"  alt=""/>
+      <img src="https://github.com/PythonnotJava/flutter_wordcloud/blob/main/example/img/1.png" style="width:100%; display:block;"  alt=""/>
     </td>
     <td style="width:33%; padding:0;">
-      <img src="example/img/2.png" style="width:100%; display:block;"  alt=""/>
+      <img src="https://github.com/PythonnotJava/flutter_wordcloud/blob/main/example/img/2.png" style="width:100%; display:block;"  alt=""/>
     </td>
   </tr>
 </table>
