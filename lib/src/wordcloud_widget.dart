@@ -24,6 +24,7 @@ class WordCloudView extends StatelessWidget {
 
     final child = CustomPaint(
       painter: _WordCloudPainter(cloud),
+
       /// 保证画布大小和逻辑实例完全一致
       size: Size(width, height),
     );

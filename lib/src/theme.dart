@@ -1,7 +1,7 @@
 import 'package:flutter/painting.dart';
 
+/// 背景渐变
 final class GradientTheme {
-
   /// 线性渐变“构造函数” —— 传入首尾颜色
   static LinearGradient linear({
     required Color start,
@@ -155,7 +155,7 @@ final class GradientTheme {
   );
 }
 
-
+/// 词云颜色映射
 final class ColorMapTheme {
   const ColorMapTheme._();
 

@@ -2,9 +2,15 @@
 
 ## 💡极简的Flutter云图
 
-> 下载: https://pub.dev/packages/flutter_wordcloud
+> pub下载: https://pub.dev/packages/flutter_wordcloud
+> 
+> github仓库: https://github.com/PythonnotJava/flutter_wordcloud
 
 只需要传入一个值表示权重的字典，即可一键生成云图。支持高清。
+
+> 注：
+> 
+> - 当遇到大量的样本时，建议传入maxFontSize，否则可能出现权重大的词的尺寸小于权重小的词
 
 ## example
 
@@ -98,7 +104,7 @@ class DemoApp extends StatelessWidget {
       minFontSize: 10,
       shape: shape,
       backgroundGradient: gradient,
-      colorList: colorMap,
+      colorMap: colorMap,
       wordSpacing: wordSpacing,
     );
 
@@ -162,6 +168,8 @@ class DemoApp extends StatelessWidget {
   }
 }
 ```
+
+--- 
 
 <table style="width:100%; table-layout:fixed;">
   <tr>

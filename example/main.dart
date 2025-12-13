@@ -9,8 +9,7 @@ import 'package:flutter_wordcloud/flutter_wordcloud.dart';
 
 int counter = 0;
 
-Future<File> saveUint8ListToDesktop(
-    Uint8List data) async {
+Future<File> saveUint8ListToDesktop(Uint8List data) async {
   final String? desktopPath = await getDownloadsDirectory()
       .then((dir) => dir?.parent.path)
       .then((parent) => '$parent/Desktop');
@@ -87,7 +86,7 @@ class DemoApp extends StatelessWidget {
       minFontSize: 10,
       shape: shape,
       backgroundGradient: gradient,
-      colorList: colorMap,
+      coloMap: colorMap,
       wordSpacing: wordSpacing,
     );
 
@@ -99,7 +98,9 @@ class DemoApp extends StatelessWidget {
               title,
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            IconButton(onPressed: () async => savePng(wc), icon: const Icon(Icons.save))
+            IconButton(
+                onPressed: () async => savePng(wc),
+                icon: const Icon(Icons.save))
           ],
         ),
         const SizedBox(height: 15),
@@ -115,17 +116,17 @@ class DemoApp extends StatelessWidget {
   }
 
   Gradient _gradientBlue() => const LinearGradient(
-    colors: [Color(0xFF4facfe), Color(0xFF00f2fe)],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
+        colors: [Color(0xFF4facfe), Color(0xFF00f2fe)],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+      );
 
   List<Color> _colorMapPink() => const [
-    Color(0xFF000fff),
-    Color(0xFF000000),
-    Color(0xFF123456),
-    Color(0xFF00ff00),
-  ];
+        Color(0xFF000fff),
+        Color(0xFF000000),
+        Color(0xFF123456),
+        Color(0xFF00ff00),
+      ];
 
   /// key是a~z任意5~10个组成，value是randint（1， 51）
   Map<String, double> generateRandomMap(int count) {

@@ -12,10 +12,11 @@ enum WordCloudShape {
   rectangle,
 }
 
+/// 画图逻辑
 class WordCloudLogic {
   /// 画布尺寸
-  final int width;
-  final int height;
+  final double width;
+  final double height;
 
   /// 背景颜色
   Color backgroundColor = Colors.white;
@@ -24,7 +25,8 @@ class WordCloudLogic {
   Gradient? backgroundGradient;
 
   /// 词云映射颜色
-  List<Color>? colorList;
+  /// rename from colorList
+  List<Color>? coloMap;
 
   /// 最小字体
   double minFontSize = 12;
@@ -33,7 +35,7 @@ class WordCloudLogic {
   late double maxFontSize;
 
   /// 词频表
-  final Map<String, double> _freq = {};
+  final Map<String, num> _freq = {};
   final List<PlacedWord> _placed = [];
 
   /// 文字旋转角度（弧度），0 表示不旋转
@@ -45,18 +47,18 @@ class WordCloudLogic {
   /// 词间距
   Offset? wordSpacing;
 
-  late double _maxWeight;
-  late double _minWeight;
+  late num _maxWeight;
+  late num _minWeight;
 
   String? fontFamily;
 
   WordCloudLogic(
-    Map<String, double> datas, {
+    Map<String, num> datas, {
     this.width = 800,
     this.height = 600,
     Color? backgroundColor,
     this.backgroundGradient,
-    this.colorList,
+    this.coloMap,
     this.minFontSize = 12,
     double? maxFontSize,
     this.rotateStep = 0.0,
@@ -67,11 +69,10 @@ class WordCloudLogic {
     if (backgroundColor != null) this.backgroundColor = backgroundColor;
 
     _freq.addAll(datas);
-    _maxWeight = datas.values.reduce(max);
-    _minWeight = datas.values.reduce(min);
+    _maxWeight = datas.values.map((e) => e.toDouble()).reduce(max);
+    _minWeight = datas.values.map((e) => e.toDouble()).reduce(min);
 
-    this.maxFontSize =
-        maxFontSize ??
+    this.maxFontSize = maxFontSize ??
         (minFontSize * 8)
             .clamp(minFontSize, min(width, height) * 0.3)
             .toDouble();
@@ -103,7 +104,7 @@ class WordCloudLogic {
     final center = Offset(width / 2, height / 2);
 
     for (final entry in sorted) {
-      final fontSize = _mapFontSize(entry.value);
+      final fontSize = _mapFontSize(entry.value.toDouble());
       final placed = _tryPlaceWord(center, entry.key, fontSize);
       if (placed != null) {
         _placed.add(placed);
@@ -202,8 +203,7 @@ class WordCloudLogic {
   }
 
   Color _getColorForWord(int index) {
-    final colors =
-        colorList ??
+    final colors = coloMap ??
         (_freq.length >= 50 ? ColorMapTheme.classic : ColorMapTheme.sunset);
     return colors[index % colors.length];
   }
