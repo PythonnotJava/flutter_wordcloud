@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:core';
 
-import 'sliceable_dict.dart';
+import 'package:excel/excel.dart';
 
 final loadRule = RegExp(r'PT (.*?\r?\nER\r?\n)', dotAll: true);
 
@@ -302,18 +302,94 @@ Future<void> genWordTable(
   }
 }
 
-main() async {
-  final path = r'C:\Users\25654\Desktop\WOSAnalysis\src\main.txt';
-  final records = await load(path: path);
-  for (final entry in records) {
-    print(matchTi(entry: entry));
-    print(matchDi(entry: entry));
-    print(matchZ9(entry: entry));
-    print(matchPu(entry: entry));
-    print(matchPy(entry: entry));
-    print(matchSc(entry: entry));
-    print(matchSo(entry: entry));
-    print(matchWc(entry: entry));
-    print("-----------------------------");
+Future<Map<String, int>> readExcel({required String path}) async {
+  var bytes = await File(path).readAsBytes();
+  final Map<String, int> result = {};
+  var excel = Excel.decodeBytes(bytes);
+  String sheetName = excel.tables.keys.first;
+  Sheet sheet = excel.tables[sheetName]!;
+  int addressColIndex = -1;
+
+  for (var i = 0; i < sheet.maxRows; i++) {
+    var row = sheet.rows[i];
+
+    if (i == 0) {
+      // 先找 Address 在第几列（标题行）
+      for (int col = 0; col < row.length; col++) {
+        final cell = row[col];
+        if (cell?.value.toString() == "Addresses") {
+          addressColIndex = col;
+          break;
+        }
+      }
+      // 如果找不到则返回
+      if (addressColIndex == -1) {
+        print("找不到 Addresses 列");
+        return {};
+      }
+      continue;
+    }
+
+    // 如果不是标题行，就取该列的值
+    if (addressColIndex >= 0 && addressColIndex < row.length) {
+      final Data? taregt = row[addressColIndex];
+      final TextCellValue? gt = taregt?.value as TextCellValue?;
+      final String? value = gt?.value.text;
+      if (value != null) {
+        final v = value.split(', ').last;
+        result.update(v, (value) => value + 1, ifAbsent: () => 1);
+      }
+    }
   }
+
+  void getRuleCount(Map<String, int> datas) {
+    // 先拷贝 key，避免遍历时修改 Map 报错
+    final keys = List<String>.from(datas.keys);
+
+    for (final k in keys) {
+      final v = datas[k] ?? 0;
+
+      if (k.contains('USA') && k != 'USA') {
+        datas['USA'] = (datas['USA'] ?? 0) + v;
+        datas.remove(k);
+
+      } else if (k == 'Peoples R China' || k == 'PRC') {
+        datas['China'] = (datas['China'] ?? 0) + v;
+        datas.remove(k);
+
+      } else if (k == 'Turkiye') {
+        datas['Turkey'] = (datas['Turkey'] ?? 0) + v;
+        datas.remove(k);
+
+      } else if (k == 'Scotland' || k == 'Wales') {
+        datas['England'] = (datas['England'] ?? 0) + v;
+        datas.remove(k);
+
+      } else if (k == 'Taiwan') {
+        datas['China'] = (datas['China'] ?? 0) + v;
+        datas.remove(k);
+      }
+    }
+  }
+  getRuleCount(result);
+  return result;
+}
+
+main() async {
+  final path = r'C:\Users\25654\Downloads\savedrecs (1).txt';
+  // final records = await load(path: path);
+  // for (final entry in records) {
+  //   print(matchTi(entry: entry));
+  //   print(matchDi(entry: entry));
+  //   print(matchZ9(entry: entry));
+  //   print(matchPu(entry: entry));
+  //   print(matchPy(entry: entry));
+  //   print(matchSc(entry: entry));
+  //   print(matchSo(entry: entry));
+  //   print(matchWc(entry: entry));
+  //   print("----------------------------");
+  // }
+  final xlsx = r'C:\Users\25654\Desktop\WOSAnalysis\src\savedrecs.xlsx';
+  final ls = await readExcel(path: xlsx);
+  print(ls);
 }

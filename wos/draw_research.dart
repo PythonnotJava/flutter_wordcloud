@@ -389,7 +389,9 @@ class DrawResearchWidgetState extends State<DrawResearchWidget>
                         height: canvasHeight,
                         backgroundGradient: GradientTheme.greenCyan,
                         coloMap: ColorMapTheme.scientificColors,
-                        minFontSize: 16)),
+                        minFontSize: 20,
+                      wordSpacing: Offset(80, 20)
+                    )),
               ),
             ),
             const SizedBox(height: 50),

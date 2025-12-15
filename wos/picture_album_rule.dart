@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:flutter/material.dart';
 import 'package:widgets_to_image/widgets_to_image.dart';
+import 'package:syncfusion_flutter_maps/maps.dart';
 
 // 这里定义了 load, matchPy, getCountSingle等
 import 'util.dart';
@@ -11,6 +13,7 @@ import 'sliceable_dict.dart';
 import 'package:flutter_wordcloud/flutter_wordcloud.dart';
 
 part 'draw_journal.dart';
+part 'draw_world_map.dart';
 part 'draw_publish.dart';
 part 'draw_research.dart';
 part 'draw_subject.dart';
@@ -24,7 +27,14 @@ class ChartData {
 }
 
 /// 保存文件夹
-const outDir = r"C:\Users\25654\Desktop\WOSAnalysis\out\new";
+const outDir = r"C:\Users\25654\Desktop\农业机械化与农业碳排放\out";
+
+// 为了更高度自定义，暂时放弃这个interface
+// mixin DrawRule<T extends StatefulWidget> on State<T> {
+//   late final xxx;
+//   @mustCallSuper
+//   void initData();
+// }
 
 class TabDemoPage extends StatefulWidget {
   const TabDemoPage({super.key, required this.records});
@@ -43,7 +53,8 @@ class TabDemoPageState extends State<TabDemoPage> {
       DrawJournalWidget(records: widget.records),
       DrawResearchWidget(records: widget.records),
       DrawPublishWidget(records: widget.records),
-      DrawSubjectWidget(records: widget.records)
+      DrawSubjectWidget(records: widget.records),
+      const DrawWorldMapPage()
     ];
     super.initState();
   }
@@ -61,6 +72,7 @@ class TabDemoPageState extends State<TabDemoPage> {
               Tab(text: "研究领域", icon: Icon(Icons.star)),
               Tab(text: "出版社", icon: Icon(Icons.shop)),
               Tab(text: "学科", icon: Icon(Icons.subject)),
+              Tab(text: "国家发文地图", icon: Icon(Icons.map),)
             ],
           ),
         ),
@@ -73,7 +85,7 @@ class TabDemoPageState extends State<TabDemoPage> {
 }
 
 void main() async {
-  final path = r'C:\Users\25654\Desktop\WOSAnalysis\src\main.txt';
+  final path = r'C:\Users\25654\Desktop\农业机械化与农业碳排放\src\savedrecs.txt';
   final records = await load(path: path);
   runApp(MaterialApp(
     title: 'WOSAnalysis For Flutter',

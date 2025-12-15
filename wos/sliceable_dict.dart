@@ -7,7 +7,7 @@ class SliceableMap<K, V> implements Map<K, V> {
     if (original != null) {
       _inner.addAll(original);
     }
-  }
+  } 
 
   /// ===== 切片功能 =====
   SliceableMap<K, V> slice(int? start, [int? end]) {

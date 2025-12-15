@@ -265,4 +265,18 @@ final class ColorMapTheme {
     Color(0xFFAA4499),
     Color(0xFF999933),
   ];
+
+  /// Turbo风格
+  static const List<Color> turboColors = [
+    Color(0xFF30123B),
+    Color(0xFF4662D7),
+    Color(0xFF36B7C5),
+    Color(0xFF53FC2A),
+    Color(0xFFC1F334),
+    Color(0xFFF7C93A),
+    Color(0xFFEE5E38),
+    Color(0xFFD73E4A),
+    Color(0xFFA62A5C),
+    Color(0xFF7A0F6E),
+  ];
 }
