@@ -1,7 +1,7 @@
 name: flutter_wordcloud
 description: "Flutter's minimal word cloud library requires only a weight dictionary."
 
-version: 1.0.1
+version: 1.0.2
 
 homepage: https://github.com/PythonnotJava/flutter_wordcloud
 repository: https://github.com/PythonnotJava/flutter_wordcloud
@@ -23,7 +23,6 @@ dev_dependencies:
 
 flutter:
 
-  
   uses-material-design: true
 
  

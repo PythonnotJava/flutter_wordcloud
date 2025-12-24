@@ -53,19 +53,19 @@ class WordCloudLogic {
   String? fontFamily;
 
   WordCloudLogic(
-    Map<String, num> datas, {
-    this.width = 800,
-    this.height = 600,
-    Color? backgroundColor,
-    this.backgroundGradient,
-    this.coloMap,
-    this.minFontSize = 12,
-    double? maxFontSize,
-    this.rotateStep = 0.0,
-    this.fontFamily,
-    this.shape = WordCloudShape.rectangle,
-    this.wordSpacing,
-  }) : assert(datas.isNotEmpty) {
+      Map<String, num> datas, {
+        this.width = 800,
+        this.height = 600,
+        Color? backgroundColor,
+        this.backgroundGradient,
+        this.coloMap,
+        this.minFontSize = 12,
+        double? maxFontSize,
+        this.rotateStep = 0.0,
+        this.fontFamily,
+        this.shape = WordCloudShape.rectangle,
+        this.wordSpacing,
+      }) : assert(datas.isNotEmpty) {
     if (backgroundColor != null) this.backgroundColor = backgroundColor;
 
     _freq.addAll(datas);
@@ -101,11 +101,9 @@ class WordCloudLogic {
     final sorted = _freq.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
 
-    final center = Offset(width / 2, height / 2);
-
     for (final entry in sorted) {
       final fontSize = _mapFontSize(entry.value.toDouble());
-      final placed = _tryPlaceWord(center, entry.key, fontSize);
+      final placed = _tryPlaceWord(entry.key, fontSize);
       if (placed != null) {
         _placed.add(placed);
       }
@@ -118,59 +116,65 @@ class WordCloudLogic {
     return minFontSize + ratio * (maxFontSize - minFontSize);
   }
 
-  PlacedWord? _tryPlaceWord(Offset center, String text, double fontSize) {
+  PlacedWord? _tryPlaceWord(String text, double fontSize) {
     final measure = _measureText(text, fontSize);
+    final spacing = wordSpacing ?? Offset(8, 8);
 
-    switch (shape) {
-      case WordCloudShape.rectangle:
-        return _placeWithRectangularSpiral(
-          center,
-          text,
-          fontSize,
-          measure,
-          wordSpacing ??
-              Offset(
-                min(width, height) / _freq.length,
-                min(width, height) / _freq.length,
-              ),
-        );
-    }
+    return _placeWithDynamicGrid(text, fontSize, measure, spacing);
   }
 
-  /// 矩形螺旋（更紧凑 + 随机化）
-  PlacedWord? _placeWithRectangularSpiral(
-    Offset center,
-    String text,
-    double fontSize,
-    _TextSize size,
-    Offset spacing,
-  ) {
-    final step = min(width, height) / 60.0;
+  /// 动态网格放置算法 - 自适应调整，优先保证大词能放进去
+  PlacedWord? _placeWithDynamicGrid(
+      String text,
+      double fontSize,
+      _TextSize size,
+      Offset spacing,
+      ) {
     final random = Random();
-    final maxLayer = (min(width, height) / step / 2).floor();
-    for (int layer = 0; layer < maxLayer + 30; layer++) {
-      final positions = <Offset>[];
+    final padding = 5.0;
+    final availableWidth = width - padding * 2;
+    final availableHeight = height - padding * 2;
 
-      for (int i = -layer; i <= layer; i++) {
-        positions.add(center + Offset(i * step, -layer * step));
-        positions.add(center + Offset(i * step, layer * step));
-      }
-      for (int i = -layer + 1; i < layer; i++) {
-        positions.add(center + Offset(-layer * step, i * step));
-        positions.add(center + Offset(layer * step, i * step));
-      }
+    final wordWidth = size.width + spacing.dx;
+    final wordHeight = size.height + spacing.dy;
 
-      positions.shuffle(random);
+    final importance = fontSize / maxFontSize;
+    final maxAttempts = (500 * (1 + importance * 2)).toInt();
 
-      for (final pos in positions) {
-        final rect = Rect.fromCenter(
-          center: pos,
-          width: size.width + spacing.dx,
-          height: size.height + spacing.dy,
+    for (int attempt = 0; attempt < maxAttempts; attempt++) {
+      Offset pos;
+
+      if (attempt < maxAttempts * 0.3) {
+        final centerX = width / 2;
+        final centerY = height / 2;
+        final spread = min(availableWidth, availableHeight) * 0.3 * (1 - importance * 0.5);
+
+        pos = Offset(
+          centerX + (random.nextDouble() - 0.5) * spread * 2,
+          centerY + (random.nextDouble() - 0.5) * spread * 2,
         );
-        if (!_hasCollision(rect)) {
-          return PlacedWord(text, pos, fontSize, rect);
-        }
+      } else {
+        pos = Offset(
+          padding + random.nextDouble() * availableWidth,
+          padding + random.nextDouble() * availableHeight,
+        );
+      }
+
+      if (pos.dx - wordWidth / 2 < padding ||
+          pos.dx + wordWidth / 2 > width - padding ||
+          pos.dy - wordHeight / 2 < padding ||
+          pos.dy + wordHeight / 2 > height - padding) {
+        continue;
+      }
+
+      final rect = Rect.fromCenter(
+        center: pos,
+        width: wordWidth,
+        height: wordHeight,
+      );
+
+      if (!_hasCollision(rect)) {
+        return PlacedWord(text, pos, fontSize, rect);
       }
     }
     return null;
@@ -195,11 +199,7 @@ class WordCloudLogic {
     for (final word in _placed) {
       if (word.rect.overlaps(candidate)) return true;
     }
-    const double margin = 8.0;
-    return candidate.left < margin ||
-        candidate.top < margin ||
-        candidate.right > width - margin ||
-        candidate.bottom > height - margin;
+    return false;
   }
 
   Color _getColorForWord(int index) {

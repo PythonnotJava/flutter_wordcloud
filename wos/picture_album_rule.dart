@@ -27,7 +27,7 @@ class ChartData {
 }
 
 /// 保存文件夹
-const outDir = r"C:\Users\25654\Desktop\农业机械化与农业碳排放\out";
+const outDir = r"C:\Users\25654\Desktop\农业碳排放\out_final";
 
 // 为了更高度自定义，暂时放弃这个interface
 // mixin DrawRule<T extends StatefulWidget> on State<T> {
@@ -85,13 +85,14 @@ class TabDemoPageState extends State<TabDemoPage> {
 }
 
 void main() async {
-  final path = r'C:\Users\25654\Desktop\农业机械化与农业碳排放\src\savedrecs.txt';
+  final path = r'C:\Users\25654\Desktop\农业碳排放\src\savedrecs.txt';
   final records = await load(path: path);
   runApp(MaterialApp(
     title: 'WOSAnalysis For Flutter',
     theme: ThemeData(
       colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
       useMaterial3: true,
+      fontFamily: 'TimesNewRoman', // 全局字体
     ),
     home: TabDemoPage(
       records: records,

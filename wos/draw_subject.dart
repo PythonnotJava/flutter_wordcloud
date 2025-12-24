@@ -445,7 +445,7 @@ class DrawSubjectWidgetState extends State<DrawSubjectWidget>
                         width: canvasWidth,
                         height: canvasHeight,
                         backgroundGradient: GradientTheme.greenCyan,
-                        coloMap: ColorMapTheme.scientificColors,
+                        coloMap: ColorMapTheme.turboColors,
                         minFontSize: 16,
                         maxFontSize: null,
                         wordSpacing: Offset(80, 20))),

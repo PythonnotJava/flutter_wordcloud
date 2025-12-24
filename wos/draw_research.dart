@@ -125,19 +125,19 @@ class DrawResearchWidgetState extends State<DrawResearchWidget>
   }
 
   void initData() {
-    final List<List<String>> journals = [];
+    final List<List<String>> research = [];
     for (final entry in widget.records) {
       final List<String>? e = matchSc(entry: entry);
       if (e != null) {
-        journals.add(e);
+        research.add(e);
       }
     }
 
-    final journalsData = getCountMult(target: journals);
-    final journalsSliceDict = sortByValue(data: journalsData, reverse: true);
+    final researchData = getCountMult(target: research);
+    final researchSliceDict = sortByValue(data: researchData, reverse: true);
 
     /// 配置初始化
-    sortResearchData = SliceableMap(journalsSliceDict);
+    sortResearchData = SliceableMap(researchSliceDict);
     sortResearchDataLength = sortResearchData.length;
     topCount = 20.clamp(0, sortResearchDataLength);
     sortResearchDataTopX = sortResearchData.slice(null, topCount);
@@ -173,7 +173,7 @@ class DrawResearchWidgetState extends State<DrawResearchWidget>
         .toList();
     pieColorMap = null;
     percentOfPieFontSize = 12;
-    pieLegendFontSize = 18;
+    pieLegendFontSize = 20;
     pieLegendPos = LegendPosition.left;
     // 饼图数据 (Top X) - 将 key 改为 "name (count)" 格式
     pieChartData = sortResearchDataTopXforPie.entries
@@ -446,7 +446,7 @@ class DrawResearchWidgetState extends State<DrawResearchWidget>
                     legend: Legend(
                       isVisible: true,
                       position: pieLegendPos,
-                      textStyle: TextStyle(fontSize: pieLegendFontSize),
+                      textStyle: TextStyle(fontSize: pieLegendFontSize, fontWeight: FontWeight.bold),
                     ),
                     tooltipBehavior:
                         TooltipBehavior(enable: true, shared: true),

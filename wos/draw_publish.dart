@@ -166,9 +166,9 @@ class DrawPublishWidgetState extends State<DrawPublishWidget>
         .map((e) => ChartData(e.key, e.value))
         .toList();
 
-    pieColorMap = null;
-    percentOfPieFontSize = 12;
-    pieLegendFontSize = 18;
+    pieColorMap = ColorMapTheme.classic;
+    percentOfPieFontSize = 16;
+    pieLegendFontSize = 20;
     pieLegendPos = LegendPosition.left;
 
     // 饼图数据 (Top X) - 将 key 改为 "name (count)" 格式
@@ -416,7 +416,7 @@ class DrawPublishWidgetState extends State<DrawPublishWidget>
                     series: <CircularSeries>[
                       PieSeries<ChartData, String>(
                         pointColorMapper: pieColorMap != null
-                            ? (_, i) => pieColorMap![i]
+                            ? (_, i) => pieColorMap![i % pieColorMap!.length]
                             : null,
                         dataSource: pieChartData,
                         xValueMapper: (ChartData data, _) => data.x,
@@ -440,7 +440,7 @@ class DrawPublishWidgetState extends State<DrawPublishWidget>
                     legend: Legend(
                       isVisible: true,
                       position: pieLegendPos,
-                      textStyle: TextStyle(fontSize: pieLegendFontSize),
+                      textStyle: TextStyle(fontSize: pieLegendFontSize, fontWeight: FontWeight.bold),
                     ),
                     tooltipBehavior:
                         TooltipBehavior(enable: true, shared: true),

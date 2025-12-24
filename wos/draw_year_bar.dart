@@ -96,16 +96,16 @@ class DrawYearBarState extends State<DrawYearBar>
     counterYearFound = 0;
     yearReverse = false;
     yearHorizontal = true;
-    xTitle = yearHorizontal ? '记录数量' : '年份';
-    yTitle = yearHorizontal ? '年份' : '记录数量';
+    xTitle = yearHorizontal ? 'Number of articles' : 'Year';
+    yTitle = yearHorizontal ? 'Year' : 'Number of articles';
     xTitleFontSize = 18.0;
     yTitleFontSize = 18.0;
     xAxisRotation = 0;
     yAxisRotation = 0;
-    xAxisFontSize = 12.0;
-    yAxisFontSize = 12.0;
+    xAxisFontSize = 18.0;
+    yAxisFontSize = 18.0;
     canvasBgColor = null;
-    gridColor = Colors.lightBlue.withValues(alpha: 0.3);
+    gridColor = Colors.lightBlue.withValues(alpha: 0.0);
     barWidth = 0.8;
     canvasWidth = 1600;
     canvasHeight = 1000;
@@ -147,7 +147,7 @@ class DrawYearBarState extends State<DrawYearBar>
         dataSource: chartData,
         xValueMapper: (ChartData data, _) => data.x,
         yValueMapper: (ChartData data, _) => data.y,
-        name: '记录数量',
+        name: 'Number of articles',
         width: barWidth,
         spacing: (1 - barWidth) / 2,
         dataLabelSettings: const DataLabelSettings(isVisible: false),
@@ -167,7 +167,7 @@ class DrawYearBarState extends State<DrawYearBar>
         dataSource: chartData,
         xValueMapper: (ChartData data, _) => data.x,
         yValueMapper: (ChartData data, _) => data.y,
-        name: '趋势',
+        name: 'Tendency',
         color: const Color(0xFFE63946),
         width: 3,
         markerSettings: const MarkerSettings(
@@ -257,10 +257,13 @@ class DrawYearBarState extends State<DrawYearBar>
                         textStyle: TextStyle(
                             fontSize: yearHorizontal
                                 ? yTitleFontSize
-                                : xTitleFontSize), // <- 应用 xTitleFontSize/yTitleFontSize
+                                : xTitleFontSize,
+                            fontWeight: FontWeight
+                                .bold), // <- 应用 xTitleFontSize/yTitleFontSize
                       ),
                       labelStyle: TextStyle(
-                          fontSize: xAxisFontSize), // <- 应用 xAxisFontSize
+                          fontSize: xAxisFontSize,
+                          fontWeight: FontWeight.bold), // <- 应用 xAxisFontSize
                       labelRotation:
                           xAxisRotation.toInt(), // <- 应用 xAxisRotation
                       majorGridLines: gridColor != null
@@ -277,10 +280,13 @@ class DrawYearBarState extends State<DrawYearBar>
                         textStyle: TextStyle(
                             fontSize: yearHorizontal
                                 ? xTitleFontSize
-                                : yTitleFontSize), // <- 应用 yTitleFontSize/xTitleFontSize
+                                : yTitleFontSize,
+                            fontWeight: FontWeight
+                                .bold), // <- 应用 yTitleFontSize/xTitleFontSize
                       ),
                       labelStyle: TextStyle(
-                          fontSize: yAxisFontSize), // <- 应用 yAxisFontSize
+                          fontSize: yAxisFontSize,
+                          fontWeight: FontWeight.bold), // <- 应用 yAxisFontSize
                       labelRotation:
                           yAxisRotation.toInt(), // <- 应用 yAxisRotation
                       majorGridLines: gridColor != null
@@ -301,7 +307,7 @@ class DrawYearBarState extends State<DrawYearBar>
                     legend: Legend(
                       isVisible: true,
                       position: LegendPosition.top,
-                      textStyle: const TextStyle(fontSize: 14),
+                      textStyle: const TextStyle(fontSize: 16),
                     ),
                   ),
                 ),

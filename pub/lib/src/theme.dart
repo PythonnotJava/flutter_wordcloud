@@ -159,6 +159,33 @@ final class GradientTheme {
 final class ColorMapTheme {
   const ColorMapTheme._();
 
+  /// 传入首尾的颜色以及分段个数实现渐变版本颜色映射
+  static List<Color> linearMap({
+    required Color from,
+    required Color to,
+    required int step,
+  }) {
+    assert(step >= 2);
+
+    List<Color> colors = [];
+
+    for (int i = 0; i < step; i++) {
+      double t = i / (step - 1);
+      int a = ((from.a * 255.0 + (to.a * 255.0 - from.a * 255.0) * t).round() &
+          0xff);
+      int r = ((from.r * 255.0 + (to.r * 255.0 - from.r * 255.0) * t).round() &
+          0xff);
+      int g = ((from.g * 255.0 + (to.g * 255.0 - from.g * 255.0) * t).round() &
+          0xff);
+      int b = ((from.b * 255.0 + (to.b * 255.0 - from.b * 255.0) * t).round() &
+          0xff);
+
+      colors.add(Color.fromARGB(a, r, g, b));
+    }
+
+    return colors;
+  }
+
   /// 经典高饱和配色（适合词云），适合样本非常多
   static const List<Color> classic = [
     Color(0xFFF44336), // red
@@ -264,5 +291,19 @@ final class ColorMapTheme {
     Color(0xFFCC6677),
     Color(0xFFAA4499),
     Color(0xFF999933),
+  ];
+
+  /// Turbo风格
+  static const List<Color> turboColors = [
+    Color(0xFF30123B),
+    Color(0xFF4662D7),
+    Color(0xFF36B7C5),
+    Color(0xFF53FC2A),
+    Color(0xFFC1F334),
+    Color(0xFFF7C93A),
+    Color(0xFFEE5E38),
+    Color(0xFFD73E4A),
+    Color(0xFFA62A5C),
+    Color(0xFF7A0F6E),
   ];
 }

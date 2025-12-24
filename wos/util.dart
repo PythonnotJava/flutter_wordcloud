@@ -4,6 +4,8 @@ import 'dart:core';
 
 import 'package:excel/excel.dart';
 
+import 'sliceable_dict.dart';
+
 final loadRule = RegExp(r'PT (.*?\r?\nER\r?\n)', dotAll: true);
 
 /// 匹配记录到列表
@@ -376,20 +378,44 @@ Future<Map<String, int>> readExcel({required String path}) async {
 }
 
 main() async {
-  final path = r'C:\Users\25654\Downloads\savedrecs (1).txt';
-  // final records = await load(path: path);
-  // for (final entry in records) {
-  //   print(matchTi(entry: entry));
-  //   print(matchDi(entry: entry));
-  //   print(matchZ9(entry: entry));
-  //   print(matchPu(entry: entry));
-  //   print(matchPy(entry: entry));
-  //   print(matchSc(entry: entry));
-  //   print(matchSo(entry: entry));
-  //   print(matchWc(entry: entry));
-  //   print("----------------------------");
-  // }
-  final xlsx = r'C:\Users\25654\Desktop\WOSAnalysis\src\savedrecs.xlsx';
-  final ls = await readExcel(path: xlsx);
-  print(ls);
+  final path = r'C:\Users\25654\Desktop\农业碳排放\src\savedrecs.txt';
+  final records = await load(path: path);
+
+  // final sortByZ9DOIdatas = sortByZ9DOI(records: records,);
+  // final  Map<String, List<dynamic>> articles = SliceableMap(sortByPointValueDynamic(data: sortByZ9DOIdatas, which: 0)).slice(null, 25);
+  // genWordTable(articles: articles, output: r'C:\Users\25654\Desktop\农业碳排放\out\引用前25名.docx');
+  final List<String> journals = [];
+  for (final entry in records) {
+    final e = matchSo(entry: entry);
+    if (e != null) {
+      journals.add(e);
+    }
+  }
+
+  final journalsData = getCountSingle(target: journals);
+  final journalsSliceDict = SliceableMap(sortByValue(data: journalsData, reverse: true)).slice(null, 100);
+  print(jsonEncode(journalsSliceDict));
+
+  final List<List<String>> subjects = [];
+  for (final entry in records) {
+    final List<String>? e = matchWc(entry: entry);
+    if (e != null) {
+      subjects.add(e);
+    }
+  }
+  final SliceableMap<String, int> subjectsData = SliceableMap(
+      sortByValue(data: getCountMult(target: subjects), reverse: true)).slice(null, 100);
+  print(jsonEncode(subjectsData));
+
+  final List<List<String>> research = [];
+  for (final entry in records) {
+    final List<String>? e = matchSc(entry: entry);
+    if (e != null) {
+      research.add(e);
+    }
+  }
+
+  final researchData = getCountMult(target: research);
+  final researchSliceDict = SliceableMap(sortByValue(data: researchData, reverse: true)).slice(null, 100);
+  print(jsonEncode(researchSliceDict));
 }
